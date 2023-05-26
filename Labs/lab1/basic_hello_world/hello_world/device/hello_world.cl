@@ -26,7 +26,7 @@ __kernel void hello_world(int thread_id_from_which_to_print_message) {
   unsigned thread_id = get_global_id(0);
 
   if(thread_id == thread_id_from_which_to_print_message) {
-    printf("This is an additional commit added by James.");
+    printf("This is an additional commit added by James.\n");
     printf("Thread #%u: Hello from the Intel FPGA OpenCL Compiler!\n", thread_id);
   }
 }
