@@ -35,6 +35,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <math.h>
 #include <cstring>
 #include "CL/opencl.h"
@@ -235,6 +236,9 @@ bool init() {
 
   // Create the program.
   std::string binary_file = getBoardBinaryFile("matrix_multi", device);
+  char pathBuffer[256];
+  getcwd(pathBuffer, sizeof(pathBuffer));
+  printf("Looking in directory %s\n", pathBuffer);
   printf("Using AOCX: %s\n", binary_file.c_str());
   program = createProgramFromBinary(context, binary_file.c_str(), &device, 1);
 
