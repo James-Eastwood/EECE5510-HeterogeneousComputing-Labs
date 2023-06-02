@@ -1,3 +1,7 @@
+# Initial Setup
+source /data/intel_fpga/devcloudLoginToolSetup.sh
+tools_setup -t A10DS
+
 cd ~/EECE5510-HeterogeneousComputing-Labs/Labs/lab1/matrix_multi
 
 printf "\\n%s\\n" "================================================================================"
@@ -7,16 +11,13 @@ printf "\\n%s\\n" "=============================================================
 aoc -march=emulator -v device/matrix_multi.cl -o bin/matrix_multi_emulation.aocx
 ln -sf matrix_multi_emulation.aocx bin/matrix_multi.aocx
 make
+error_check
 
 ./bin/host -emulator
 
 printf "\\n%s\\n" "================================================================================"
 printf "\\n%s\\n" "Running in FPGA Mode"
 printf "\\n%s\\n" "================================================================================"
-
-# Initial Setup
-source /data/intel_fpga/devcloudLoginToolSetup.sh
-tools_setup -t A10DS
 
 # Check Arria 10 PAC card connectivity
 aocl diagnose
