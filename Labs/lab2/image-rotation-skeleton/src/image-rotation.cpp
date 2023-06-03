@@ -85,8 +85,8 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
         int ix = item[0];
         int iy = item[1];
 
-        const float centerX = 0; // ((float)ImageWidth) / 2;
-        const float centerY = 0; // ((float)ImageHeight) / 2;
+        const float centerX = ((float)ImageWidth) / 2.0f;
+        const float centerY = ((float)ImageHeight) / 2.0f;
 
 	    // calculate location of data to move int (ix, iy)
         // output decomposition as mentioned on Page 17 of the slides
