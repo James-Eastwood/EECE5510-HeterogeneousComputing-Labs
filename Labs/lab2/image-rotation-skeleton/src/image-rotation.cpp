@@ -87,14 +87,12 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
 
 	    // calculate location of data to move int (ix, iy)
         // output decomposition as mentioned on Page 17 of the slides
-	    // TODO: calculate xpos and ypos properly
-        float xpos = 0;
-        float ypos = 0;
+        float xpos =  ((float)ix) * cosTheta + ((float)iy) * sinTheta;
+        float ypos = -(((float)ix) * sinTheta) + ((float)iy) * cosTheta;
 
 	    /* Bound checking to make sure xpos and ypos are in range */
-	    // TODO:
-        if(((int)xpos >= 0) && (1/* TODO: xpos in range */) &&
-           ((int)ypos >= 0) && (1/* TODO: ypos in range */) )
+        if(((int)xpos >= 0) && ((int)xpos < ImageCols) &&
+           ((int)ypos >= 0) && ((int)ypos < ImageRows))
         {
            /* read (ix,iy) src data and store at (xpos,ypos) in dest data
             * in this case, because we rotate about the origin and
@@ -102,8 +100,9 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
             * unique for each input (ix, iy) and so each work-item can
             * write its results independently
             */
-	        // TODO: calculate source and destination pixel location properly
-           dstPtr[0] = srcPtr[0];
+            const int srcIdx = (iy * ImageCols) + ix;
+            const int dstIdx = (((int)ypos) * ImageCols) + ((int)xpos)
+           dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
     );
