@@ -27,7 +27,7 @@ error_check
 aoc device/matrix_multi.cl -o bin/matrix_multi_fpga.aocx -board=pac_a10
 
 # Relink to hardware .aocx
-ln -sf bin/matrix_multi_fpga.aocx bin/matrix_multi.aocx
+ln -sf matrix_multi_fpga.aocx bin/matrix_multi.aocx
 # Availavility of Acceleration cards
 aoc -list-boards
 error_check
@@ -43,6 +43,10 @@ error_check
 
 # 3.6 Programming the Arria 10 GX PAC Card
 aocl program acl0 matrix_multi_fpga_unsigned.aocx
+
+printf "\\n%s\\n" "================================================================================"
+ls
+pwd
 
 # 3.7 Running the host code
 ./host
