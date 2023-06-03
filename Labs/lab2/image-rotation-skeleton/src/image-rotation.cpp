@@ -46,10 +46,10 @@ constexpr size_t array_size = IMAGE_SIZE;
 typedef std::array<float, array_size> FloatArray;
 
 //************************************
-// Image Rotation in DPC++ on device: 
+// Image Rotation in DPC++ on device:
 //************************************
-void ImageRotation(queue &q, float *image_in, float *image_out,  
-    const size_t ImageRows, const size_t ImageCols, float sinTheta, float cosTheta) 
+void ImageRotation(queue &q, float *image_in, float *image_out,
+    const size_t ImageRows, const size_t ImageCols, float sinTheta, float cosTheta)
 {
     // We create buffers for the input and output data.
     buffer<float, 1> image_in_buf(image_in, range<1>(ImageRows*ImageCols));
@@ -70,7 +70,7 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
       // read/write. The accessor is a way to access the memory in the buffer.
       accessor srcPtr(image_in_buf, h, read_only);
 
-      // Another way to get access is to call get_access() member function 
+      // Another way to get access is to call get_access() member function
       auto dstPtr = image_out_buf.get_access<access::mode::write>(h);
 
       // Use parallel_for to run image convolution in parallel on device. This
@@ -79,30 +79,30 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
       //    2nd parameter is the kernel, a lambda that specifies what to do per
       //    work item. The parameter of the lambda is the work item id.
       // DPC++ supports unnamed lambda kernel by default.
-      h.parallel_for(num_items, [=](id<2> item) 
-      { 
+      h.parallel_for(num_items, [=](id<2> item)
+      {
         // get row and col of the pixel assigned to this work item
         int ix = item[0];
         int iy = item[1];
 
-	// calculate location of data to move int (ix, iy)
+	    // calculate location of data to move int (ix, iy)
         // output decomposition as mentioned on Page 17 of the slides
-	// TODO: calculate xpos and ypos properly
-        float xpos = 0; 
-        float ypos = 0;
+        float xpos =  ((float)ix) * cosTheta + ((float)iy) * sinTheta;
+        float ypos = -(((float)ix) * sinTheta) + ((float)iy) * cosTheta;
 
-	/* Bound checking to make sure xpos and ypos are in range */
-	// TODO: 
-        if(((int)xpos >= 0) && (1/* TODO: xpos in range */) &&
-           ((int)ypos >= 0) && (1/* TODO: ypos in range */) )
+	    /* Bound checking to make sure xpos and ypos are in range */
+        if(((int)xpos >= 0) && ((int)xpos < ImageCols) &&
+           ((int)ypos >= 0) && ((int)ypos < ImageRows))
         {
            /* read (ix,iy) src data and store at (xpos,ypos) in dest data
             * in this case, because we rotate about the origin and
             * there is no translation, we know that (xpos, ypos) will be
             * unique for each input (ix, iy) and so each work-item can
-            * write its results independently */
-	   // TODO: calculate source and destination pixel location properly
-           dstPtr[0] = srcPtr[0];
+            * write its results independently
+            */
+            const int srcIdx = (iy * ImageCols) + ix;
+            const int dstIdx = (((int)ypos) * ImageCols) + ((int)xpos)
+           dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
     );
@@ -142,12 +142,12 @@ int main() {
   auto myPlatforms = platform::get_platforms();
   // loop through the platforms to poke into
   for (auto &onePlatform : myPlatforms) {
-    std::cout << ++number << " found .." << std::endl << "Platform: " 
+    std::cout << ++number << " found .." << std::endl << "Platform: "
     << onePlatform.get_info<info::platform::name>() <<std::endl;
     // loop through the devices
     auto myDevices = onePlatform.get_devices();
     for (auto &oneDevice : myDevices) {
-      std::cout << "Device: " 
+      std::cout << "Device: "
       << oneDevice.get_info<info::device::name>() <<std::endl;
     }
   }
