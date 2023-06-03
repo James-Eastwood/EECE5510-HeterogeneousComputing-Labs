@@ -49,7 +49,7 @@ typedef std::array<float, array_size> FloatArray;
 // Image Rotation in DPC++ on device:
 //************************************
 void ImageRotation(queue &q, float *image_in, float *image_out,
-    const size_t ImageWidth, const size_t ImageHeight, float sinTheta, float cosTheta)
+    const size_t ImageHeight, const size_t ImageWidth, float sinTheta, float cosTheta)
 {
     // We create buffers for the input and output data.
     buffer<float, 1> image_in_buf(image_in, range<1>(ImageRows*ImageCols));
@@ -100,8 +100,8 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
             * unique for each input (ix, iy) and so each work-item can
             * write its results independently
             */
-            const int srcIdx = (iy * ImageHeight) + ix;
-            const int dstIdx = (((int)ypos) * ImageHeight) + ((int)xpos);
+            const int srcIdx = (iy * ImageWidth) + ix;
+            const int dstIdx = (((int)ypos) * ImageWidth) + ((int)xpos);
            dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
@@ -156,7 +156,7 @@ int main() {
 
   /* Read in the BMP image */
   hInputImage = readBmpFloat(inputImagePath, &imageRows, &imageCols);
-  printf("imageRows=%d, imageCols=%d\n", imageRows, imageCols);
+  printf("ImageHeight(imageRows)=%d, ImageWidth(imageCols)=%d\n", imageRows, imageCols);
   /* Allocate space for the output image */
   hOutputImage = (float *)malloc( imageRows*imageCols * sizeof(float) );
   for(i=0; i<imageRows*imageCols; i++)
