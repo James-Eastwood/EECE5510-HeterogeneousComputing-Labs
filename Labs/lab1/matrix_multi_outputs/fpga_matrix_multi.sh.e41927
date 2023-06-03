@@ -1,0 +1,5 @@
+host/src/main.cpp: In function ‘bool init()’:
+host/src/main.cpp:240:9: warning: ignoring return value of ‘char* getcwd(char*, size_t)’, declared with attribute warn_unused_result [-Wunused-result]
+   getcwd(pathBuffer, sizeof(pathBuffer));
+   ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Compiler Warning: device/matrix_multi.cl:23: declaring global arguments 'outputC', 'inputA' and 'inputB' with no 'restrict' may lead to low performance for kernel 'simpleMultiply'
