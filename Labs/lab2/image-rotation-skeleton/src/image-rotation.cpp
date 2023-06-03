@@ -49,7 +49,7 @@ typedef std::array<float, array_size> FloatArray;
 // Image Rotation in DPC++ on device:
 //************************************
 void ImageRotation(queue &q, float *image_in, float *image_out,
-    const size_t ImageRows, const size_t ImageCols, float sinTheta, float cosTheta)
+    const size_t ImageWidth, const size_t ImageHeight, float sinTheta, float cosTheta)
 {
     // We create buffers for the input and output data.
     buffer<float, 1> image_in_buf(image_in, range<1>(ImageRows*ImageCols));
@@ -61,7 +61,7 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
     //}
 
     // Create the range object for the pixel data.
-    range<2> num_items{ImageRows, ImageCols};
+    range<2> num_items{ImageWidth, ImageHeight};
 
     // Submit a command group to the queue by a lambda function that contains the
     // data access permission and device computation (kernel).
@@ -91,8 +91,8 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
         float ypos = -(((float)ix) * sinTheta) + ((float)iy) * cosTheta;
 
 	    /* Bound checking to make sure xpos and ypos are in range */
-        if(((int)xpos >= 0) && ((int)xpos < ImageCols) &&
-           ((int)ypos >= 0) && ((int)ypos < ImageRows))
+        if(((int)xpos >= 0) && ((int)xpos < ImageWidth) &&
+           ((int)ypos >= 0) && ((int)ypos < ImageHeight))
         {
            /* read (ix,iy) src data and store at (xpos,ypos) in dest data
             * in this case, because we rotate about the origin and
@@ -100,8 +100,8 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
             * unique for each input (ix, iy) and so each work-item can
             * write its results independently
             */
-            const int srcIdx = (iy * ImageCols) + ix;
-            const int dstIdx = (((int)ypos) * ImageCols) + ((int)xpos)
+            const int srcIdx = (iy * ImageHeight) + ix;
+            const int dstIdx = (((int)ypos) * ImageHeight) + ((int)xpos);
            dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
