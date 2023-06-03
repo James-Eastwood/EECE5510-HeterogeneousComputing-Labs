@@ -52,8 +52,8 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
     const size_t ImageHeight, const size_t ImageWidth, float sinTheta, float cosTheta)
 {
     // We create buffers for the input and output data.
-    buffer<float, 1> image_in_buf(image_in, range<1>(ImageRows*ImageCols));
-    buffer<float, 1> image_out_buf(image_out, range<1>(ImageRows*ImageCols));
+    buffer<float, 1> image_in_buf(image_in, range<1>(ImageWidth*ImageHeight));
+    buffer<float, 1> image_out_buf(image_out, range<1>(ImageWidth*ImageHeight));
 
     //for(int i=0; i<ImageRows; i++) {
       //for(int j=0; j<ImageCols; j++)
