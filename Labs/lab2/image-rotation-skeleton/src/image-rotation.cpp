@@ -85,13 +85,10 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
         int ix = item[0];
         int iy = item[1];
 
-        const float centerX = ((float)ImageWidth) / 2.0f;
-        const float centerY = ((float)ImageHeight) / 2.0f;
-
 	    // calculate location of data to move int (ix, iy)
         // output decomposition as mentioned on Page 17 of the slides
-        float xpos =  ((float)ix + centerX) * cosTheta + ((float)iy + centerY) * sinTheta;
-        float ypos = -(((float)ix + centerX) * sinTheta) + ((float)iy + centerY) * cosTheta;
+        float xpos =  ((float)ix) * cosTheta + ((float)iy) * sinTheta;
+        float ypos = -(((float)ix) * sinTheta) + ((float)iy) * cosTheta;
 
 	    /* Bound checking to make sure xpos and ypos are in range */
         if(((int)xpos >= 0) && ((int)xpos < ImageWidth) &&
@@ -104,7 +101,7 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
             * write its results independently
             */
             const int srcIdx = (iy * ImageWidth) + ix;
-            const int dstIdx = (((int)ypos) * ImageWidth) + ((int)xpos);
+            const int dstIdx = (int)ypos * ImageWidth + (int)xpos;
            dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
