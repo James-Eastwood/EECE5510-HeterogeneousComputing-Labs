@@ -102,7 +102,7 @@ void ImageRotation(queue &q, float *image_in, float *image_out,
             */
             const int srcIdx = (iy * ImageWidth) + ix;
             const int dstIdx = (int)ypos * ImageWidth + (int)xpos;
-           dstPtr[dstIdx] = srcPtr[srcIdx];
+            dstPtr[dstIdx] = srcPtr[srcIdx];
         }
       }
     );
