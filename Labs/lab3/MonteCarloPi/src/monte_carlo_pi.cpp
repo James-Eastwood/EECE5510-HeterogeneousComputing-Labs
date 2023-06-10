@@ -1,14 +1,19 @@
+#define BUILD_FOR_FPGA 1
+
 #include <sycl/sycl.hpp>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#if BUILD_FOR_FPGA
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#endif
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "monte_carlo_pi.hpp"
-#define STB_IMAGE_IMPLEMENTATION 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
@@ -68,7 +73,12 @@ float MonteCarloPi(rgb image_plot[]) {
   }
 
   // Set up sycl queue
+#if BUILD_FOR_FPGA
+  ext::intel::fpga_emulator_selector d_selector;
+  queue q(d_selector);
+#else
   queue q(default_selector_v);
+#endif
   std::cout << "\nRunning on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
