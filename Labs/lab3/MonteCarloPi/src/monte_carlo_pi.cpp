@@ -1,4 +1,4 @@
-#define BUILD_FOR_FPGA 1
+#define BUILD_FOR_FPGA 0
 
 #include <sycl/sycl.hpp>
 #include <iostream>
@@ -21,7 +21,7 @@
 using namespace sycl;
 
 // Number of samples
-constexpr int size_n = 10000;  // Must be greater than size_wg
+constexpr int size_n = 1000000; // 10000;  // Must be greater than size_wg
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
