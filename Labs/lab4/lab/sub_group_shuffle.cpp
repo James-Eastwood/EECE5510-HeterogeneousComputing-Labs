@@ -19,15 +19,15 @@ int main() {
   for (int i = 0; i < N; i++) std::cout << data[i] << " ";
   std::cout << "\n\n";
 
-  q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
+  q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(8)]] {
     auto sg = item.get_sub_group();
     auto i = item.get_global_id(0);
 
     //# swap adjacent items in array using sub_group permute_group_by_xor
-    data[i] = permute_group_by_xor(sg, data[i], 7);
+    //data[i] = permute_group_by_xor(sg, data[i], 1);
       
     //# reverse the order of items in sub_group using permute_group_by_xor
-    //data[i] = permute_group_by_xor(sg, data[i], sg.get_max_local_range()[0] - 1);
+    data[i] = permute_group_by_xor(sg, data[i], sg.get_max_local_range()[0] - 1);
       
   }).wait();
 

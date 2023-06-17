@@ -24,7 +24,7 @@ int main() {
     auto i = item.get_global_id(0);
 
     //# Add all elements in sub_group using sub_group algorithm
-    int result = reduce_over_group(sg, data[i], plus<>());
+    int result = reduce_over_group(sg, data[i], maximum<>());
 
     //# write sub_group sum in first location for each sub_group
     if (sg.get_local_id()[0] == 0) {

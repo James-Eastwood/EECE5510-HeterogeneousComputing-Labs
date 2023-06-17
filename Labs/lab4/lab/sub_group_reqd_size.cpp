@@ -8,6 +8,7 @@ using namespace sycl;
 
 static constexpr size_t N = 64; // global size
 static constexpr size_t B = 64; // work-group size
+static constexpr size_t S = 32; // sub-group size
 
 int main() {
   queue q;
@@ -28,7 +29,7 @@ int main() {
 
     //# nd-range kernel with user specified sub_group size
     //# TODO: try changing to a different sub_group size
-    h.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(8)]] {
+    h.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(S)]] {
       //# get sub_group handle
       auto sg = item.get_sub_group();
 

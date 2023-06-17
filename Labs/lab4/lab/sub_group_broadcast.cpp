@@ -20,7 +20,7 @@ int main() {
   std::cout << "\n\n";  
 
   //# use parallel_for and sub_groups
-  q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
+  q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(8)]] {
     auto sg = item.get_sub_group();
     auto i = item.get_global_id(0);
 
